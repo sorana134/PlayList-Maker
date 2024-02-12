@@ -1,0 +1,37 @@
+div {
+
+    text-align: center;
+
+}
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+table {
+    border-collapse: collapse;
+    border: 2px solid black;
+
+    width: 100%;
+    color: black;
+    font-family: monospace;
+    font-size: 25px;
+    text-align: left;
+}
+
+form {
+    border-collapse: collapse;
+    border: 2px solid black;
+
+    width: 100%;
+    color: black;
+    font-family: monospace;
+    font-size: 25px;
+}
+
+th#check
+{
+   width: 5px;
+}
