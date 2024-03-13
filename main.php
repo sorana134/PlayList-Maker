@@ -1,3 +1,5 @@
+<!-- index.php -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +11,7 @@
 </head>
 <body>
 
-<form id="songForm" method="post" ">
+<form id="songForm" method="post">
     <?php
     $database = "identifier.sqlite";
     $conn = new SQLite3($database);
@@ -40,21 +42,6 @@
 
     <input type="button" value="Play Selected Songs" onclick="processSelection()">
 </form>
-<div id="playing">
-<table>
-    <tr>
-        <th>Now Playing</th>
-    <tr id="nowPlaying">
-
-        </tr>
-    <tr>
-        <td><</td>
-     <td>   <button onclick="start_button()">Play</button>
-        </td>
-        <td>></td>
-    </tr>
-</table>
-</div>
 
 <div >
     <form id="playlistF" method="post" ">
@@ -75,6 +62,22 @@
 </div>
 
 <script>
+    // Include React and ReactDOM
+    const scriptReact = document.createElement('script');
+    scriptReact.src = 'https://unpkg.com/react@17/umd/react.development.js';
+    document.head.appendChild(scriptReact);
+
+    const scriptReactDOM = document.createElement('script');
+    scriptReactDOM.src = 'https://unpkg.com/react-dom@17/umd/react-dom.development.js';
+    document.head.appendChild(scriptReactDOM);
+
+    scriptReact.onload = scriptReactDOM.onload = function () {
+        // Load the React components dynamically
+        const scriptApp = document.createElement('script');
+        scriptApp.src = 'App.jsx';
+        document.head.appendChild(scriptApp);
+    };
+
     function processSelection() {
         $.ajax({
             type: 'POST',
@@ -90,45 +93,8 @@
             }
         });
     }
-
-
-    function start_button() {
-        $.ajax({
-            type: 'POST',
-            url: 'start_button.php',
-            data: $('#songForm').serialize(),
-            success: function (data) {
-
-                $('#nowPlaying').html(data);
-
-            },
-            error: function (xhr, status, error) {
-                console.error("AJAX error:", status, error);
-                alert('An error occurred while processing the selection.');
-            }
-        });
-    }
-    function deleteS() {
-        $.ajax({
-            type: 'POST',
-            url: 'delete.php',
-            data: $('#playlistF').serialize(),
-            success: function (data) {
-
-                $('#playlist').html(data);
-
-            },
-            error: function (xhr, status, error) {
-                console.error("AJAX error:", status, error);
-                alert('An error occurred while processing the selection.');
-            }
-        });
-    }
-
-
-
-
 </script>
 
 </body>
 </html>
+
