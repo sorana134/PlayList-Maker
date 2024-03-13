@@ -41,17 +41,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $playlistResult = $conn->query($playlistQuery);
 
         // Display the playlist in an HTML table
-        echo "<table>";
-        echo "<tr><th>Playlist</th></tr>";
+        echo "<div style='max-height: 500px; overflow: auto;'>";
+
+        echo "<table style='border: none'>";
 
         while ($playlistRow = $playlistResult->fetchArray(SQLITE3_ASSOC)) {
             echo "<tr>";
+            ;
+            echo "<td><input type='checkbox' name='selectedSongs[]' value='{$playlistRow['id']}'></td>";
             echo "<td>{$playlistRow['song_name']} - {$playlistRow['artist']} {$playlistRow['length']}</td>";
             echo "</tr>";
         }
 
         echo "</table>";
-
+        echo "</div>";
         // Close connection
         $conn->close();
     } else {
@@ -77,41 +80,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     echo "Playlist emptied on page reload!";
 }
 
-// Fetch and display the YouTube video link for the currently playing song
+
+//remove the song from the playlist once it has been played
 $database = "identifier.sqlite";
 $conn = new SQLite3($database);
+
 
 // Check connection
 if (!$conn) {
     die("Connection failed");
 }
 
-// Fetch the currently playing song from the playlist table
-$nowPlayingQuery = "SELECT * FROM playlist JOIN songs ON playlist.song_id = songs.song_id LIMIT 1";
 
-
-$nowPlayingResult = $conn->query($nowPlayingQuery);
-
-if ($nowPlayingResult) {
-    $nowPlayingRow = $nowPlayingResult->fetchArray(SQLITE3_ASSOC);
-
-    // Display the currently playing song in the middle table
-    echo "<table>";
-    echo "<tr><th>Now Playing</th></tr>";
-    echo "<tr><td>{$nowPlayingRow['song_name']} - {$nowPlayingRow['artist']} {$nowPlayingRow['length']}</td></tr>";
-    echo "</table>";
-
-    // Play the audio locally
-    echo "<audio controls>";
-
-    echo "<source src='music/{$nowPlayingRow['link']}' type='audio/mpeg'>";
-    echo "Your browser does not support the audio element.";
-    echo "</audio>";
-
-    $conn->close();
-} else {
-    echo "Error fetching Now Playing information.";
-}
 ?>
 
 </body>

@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<form id="songForm" method="post" ;">
+<form id="songForm" method="post" ">
     <?php
     $database = "identifier.sqlite";
     $conn = new SQLite3($database);
@@ -40,38 +40,39 @@
 
     <input type="button" value="Play Selected Songs" onclick="processSelection()">
 </form>
-
+<div id="playing">
 <table>
     <tr>
         <th>Now Playing</th>
-    <tr><td id="nowPlaying">
+    <tr id="nowPlaying">
 
-        </td></tr>
+        </tr>
     <tr>
         <td><</td>
-     <td>   <button onclick="playCurrentSong()">Play</button>
+     <td>   <button onclick="start_button()">Play</button>
         </td>
         <td>></td>
     </tr>
 </table>
+</div>
 
-<table>
-    <tr>
-        <th>Playlist</th>
-    <tr><td id="playlist">
-            <?php
-            $playlistQuery = "SELECT * FROM playlist JOIN songs ON playlist.song_id = songs.song_id";
-            $playlistResult = $conn->query($playlistQuery);
-            while ($playlistRow = $playlistResult->fetchArray(SQLITE3_ASSOC)) {
-                echo "<tr>";
-                echo "<td>{$playlistRow['song_name']} - {$playlistRow['artist']} {$playlistRow['length']}</td>";
-                echo "</tr>";
-            }
-            ?>
+<div >
+    <form id="playlistF" method="post" ">
+    <table>
+        <tr>
+            <th>Playlist</th>
+        </tr>
+        <tr id="playlist">
+        </tr>
+        <tr>
+            <td><</td>
+            <td>   <button onclick="deleteS()">Delete</button>
+            </td>
 
-        </td></tr>
-    </tr>
-</table>
+        </tr>
+    </table>
+
+</div>
 
 <script>
     function processSelection() {
@@ -80,13 +81,53 @@
             url: 'process_selection.php',
             data: $('#songForm').serialize(),
             success: function (data) {
+
                 $('#playlist').html(data);
+
             },
             error: function () {
                 alert('An error occurred while processing the selection.');
             }
         });
     }
+
+
+    function start_button() {
+        $.ajax({
+            type: 'POST',
+            url: 'start_button.php',
+            data: $('#songForm').serialize(),
+            success: function (data) {
+
+                $('#nowPlaying').html(data);
+
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX error:", status, error);
+                alert('An error occurred while processing the selection.');
+            }
+        });
+    }
+    function deleteS() {
+        $.ajax({
+            type: 'POST',
+            url: 'delete.php',
+            data: $('#playlistF').serialize(),
+            success: function (data) {
+
+                $('#playlist').html(data);
+
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX error:", status, error);
+                alert('An error occurred while processing the selection.');
+            }
+        });
+    }
+
+
+
+
 </script>
 
 </body>
